@@ -1,0 +1,6 @@
+{
+  "name": "Question Paper Builder",
+  "description": "An interactive tool to design, customize, preview, and export high-quality, formatted school question papers directly into Google Doc ready-to-paste text and print layouts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
