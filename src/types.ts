@@ -26,3 +26,27 @@ export interface QuestionPaper {
   instructions: string; // e.g., "All questions are compulsory."
   questions: Question[];
 }
+
+export interface AssessmentRecord {
+  assessmentName: string;
+  subjectMarks: Record<string, string>; // key: subject name, value: mark
+}
+
+export interface ReportCard {
+  id?: string;
+  updatedAt?: number;
+  schoolName: string;
+  schoolAddress: string;
+  academicYear: string;
+  studentName: string;
+  className: string;
+  section: string;
+  rollNo: string;
+  subjects: string[];
+  subjectFullMarks?: Record<string, string>;
+  assessments: AssessmentRecord[];
+  sportsRemark: string;
+  disciplineRemark: string;
+  overallRemark: string;
+}
+

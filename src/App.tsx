@@ -5,6 +5,7 @@ import { HeaderForm } from "./components/HeaderForm";
 import { QuestionsBuilder } from "./components/QuestionsBuilder";
 import { GoogleDocExport } from "./components/GoogleDocExport";
 import { PrintPreview } from "./components/PrintPreview";
+import { ReportCardApp } from "./components/ReportCardApp";
 import { 
   Eye, 
   Edit3, 
@@ -61,6 +62,7 @@ export default function App() {
   const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showLockConfirm, setShowLockConfirm] = useState(false);
+  const [currentApp, setCurrentApp] = useState<"question-paper" | "report-card">("question-paper");
 
   // Password in localStorage (default is 'admin457*')
   const [masterPassword, setMasterPassword] = useState(() => {
@@ -343,7 +345,7 @@ export default function App() {
             <div>
               <div className="flex items-center space-x-2">
                 <h1 className="text-lg font-bold tracking-tight text-slate-900">
-                  Question Paper Builder
+                  {currentApp === "question-paper" ? "Question Paper Builder" : "Report Card Generator"}
                 </h1>
                 <span className="inline-flex items-center space-x-1.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border border-emerald-200" title="This application runs 100% on your device. Your changes are automatically saved locally and remain accessible without internet connection.">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -351,9 +353,32 @@ export default function App() {
                 </span>
               </div>
               <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">
-                Formal Exam Layouts &amp; Google Docs Tabbed Export
+                {currentApp === "question-paper" ? "Formal Exam Layouts & Google Docs Tabbed Export" : "Student Progress Reports & Printable Layouts"}
               </p>
             </div>
+          </div>
+
+          <div className="flex bg-slate-100 rounded-lg p-1 border border-slate-200">
+            <button
+              onClick={() => setCurrentApp("question-paper")}
+              className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                currentApp === "question-paper"
+                  ? "bg-white text-blue-600 shadow-sm"
+                  : "text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              Question Papers
+            </button>
+            <button
+              onClick={() => setCurrentApp("report-card")}
+              className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                currentApp === "report-card"
+                  ? "bg-white text-blue-600 shadow-sm"
+                  : "text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              Report Cards
+            </button>
           </div>
 
           {/* Locking & Lock Status Header Actions */}
@@ -371,7 +396,8 @@ export default function App() {
       </header>
 
       {/* Main Workspace Layout */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+      {currentApp === "question-paper" ? (
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
         
         {/* Page Switcher Navigation */}
         <div className="no-print flex rounded-lg bg-slate-200/60 p-1 mb-6 border border-slate-300 max-w-md mx-auto shadow-sm">
@@ -636,7 +662,10 @@ export default function App() {
           )}
 
         </div>
-      </main>
+        </main>
+      ) : (
+        <ReportCardApp />
+      )}
 
       {/* Lock Portal Confirmation Modal */}
       {showLockConfirm && (

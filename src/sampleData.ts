@@ -1,4 +1,4 @@
-import { QuestionPaper } from "./types";
+import { QuestionPaper, ReportCard } from "./types";
 
 export const SAMPLE_MATH_PAPER: QuestionPaper = {
   schoolName: "",
@@ -71,4 +71,31 @@ export const SAMPLE_MATH_PAPER: QuestionPaper = {
       ]
     }
   ]
+};
+
+export const SAMPLE_REPORT_CARD: ReportCard = {
+  schoolName: "XYZ SCHOOL",
+  schoolAddress: "abc place, Imphal",
+  academicYear: "2023-24",
+  studentName: "",
+  className: "",
+  section: "",
+  rollNo: "",
+  subjects: ["Science", "Mathematics", "English", "Hindi", "Social Science", "Information Technology"],
+  subjectFullMarks: {
+    "Science": "100",
+    "Mathematics": "100",
+    "English": "100",
+    "Hindi": "100",
+    "Social Science": "100",
+    "Information Technology": "100"
+  },
+  assessments: [
+    { assessmentName: "FA-I", subjectMarks: {} },
+    { assessmentName: "FA-II", subjectMarks: {} },
+    { assessmentName: "SA-I", subjectMarks: {} }
+  ],
+  sportsRemark: "",
+  disciplineRemark: "",
+  overallRemark: ""
 };
