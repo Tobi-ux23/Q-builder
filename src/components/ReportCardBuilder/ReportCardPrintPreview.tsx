@@ -20,7 +20,7 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
     });
     const percentage = totalMax > 0 ? (total / totalMax) * 100 : 0;
     return {
-      total: count > 0 ? total.toString() : "",
+      total: count > 0 ? `${total}/${totalMax}` : "",
       percentage: count > 0 ? percentage.toFixed(1) + "%" : "",
     };
   };
@@ -29,6 +29,12 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
     <>
       <style type="text/css">
         {`
+          @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&display=swap');
+          
+          .font-merriweather {
+            font-family: 'Merriweather', serif;
+          }
+
           @media print {
             @page { size: A4 landscape; margin: 15mm; }
             body { -webkit-print-color-adjust: exact; }
@@ -48,28 +54,28 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
           REPORT CARD
         </h2>
         <p className="text-sm font-bold">
-          Progress Report - Academic Year {reportCard.academicYear || "2023–24"}
+          Progress Report - Academic Year <span className="font-merriweather font-medium tracking-wide text-slate-800">{reportCard.academicYear || "2026–27"}</span>
         </p>
       </div>
 
       <div className="font-serif text-sm space-y-4 mb-4">
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-end">
           <span className="font-bold">Student's Name:</span>
-          <span className="flex-1 font-semibold">{reportCard.studentName}</span>
+          <span className="flex-1 font-merriweather font-medium text-slate-900 text-[15px] border-b border-transparent pb-px">{reportCard.studentName}</span>
         </div>
         
-        <div className="flex justify-between">
-          <div className="flex gap-2">
+        <div className="flex justify-start gap-24">
+          <div className="flex gap-2 items-end">
             <span className="font-bold">Class:</span>
-            <span className="font-semibold">{reportCard.className}</span>
+            <span className="font-merriweather font-medium text-slate-900 border-b border-transparent pb-px px-1">{reportCard.className}</span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-end">
             <span className="font-bold">Section:</span>
-            <span className="font-semibold">{reportCard.section}</span>
+            <span className="font-merriweather font-medium text-slate-900 border-b border-transparent pb-px px-1">{reportCard.section}</span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-end">
             <span className="font-bold">Roll No:</span>
-            <span className="font-semibold">{reportCard.rollNo}</span>
+            <span className="font-merriweather font-medium text-slate-900 border-b border-transparent pb-px px-1">{reportCard.rollNo}</span>
           </div>
         </div>
       </div>
@@ -105,15 +111,20 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
               <td className="border border-black p-3 font-bold">
                 {a.assessmentName}
               </td>
-              {reportCard.subjects.map((sub, sIdx) => (
-                <td key={sIdx} className="border border-black p-3">
-                  {a.subjectMarks[sub] || ""}
+              {reportCard.subjects.map((sub, sIdx) => {
+                const maxVal = parseFloat(reportCard.subjectFullMarks?.[sub] || "100") || 100;
+                const val = a.subjectMarks[sub];
+                const displayVal = val ? `${val}/${maxVal}` : "";
+                
+                return (
+                <td key={sIdx} className="border border-black p-3 font-merriweather font-medium text-slate-800 text-[15px]">
+                  {displayVal}
                 </td>
-              ))}
-              <td className="border border-black p-3 font-bold">
+              )})}
+              <td className="border border-black p-3 font-merriweather font-bold text-slate-900 text-[15px]">
                 {metrics.total}
               </td>
-              <td className="border border-black p-3 font-bold">
+              <td className="border border-black p-3 font-merriweather font-bold text-slate-900 text-[15px]">
                 {metrics.percentage}
               </td>
             </tr>
@@ -126,20 +137,20 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
         <div className="font-bold mb-2">Remarks in :</div>
         <div className="flex items-end gap-2">
           <span className="font-bold whitespace-nowrap">Sports:</span>
-          <span className="flex-1 border-b border-black pb-0.5 min-w-[200px]">{reportCard.sportsRemark}</span>
+          <span className="flex-1 border-b border-black pb-0.5 min-w-[200px] font-merriweather font-medium text-slate-800 px-2">{reportCard.sportsRemark}</span>
           <span className="font-bold whitespace-nowrap ml-4">Discipline:</span>
-          <span className="flex-1 border-b border-black pb-0.5 min-w-[200px]">{reportCard.disciplineRemark}</span>
+          <span className="flex-1 border-b border-black pb-0.5 min-w-[200px] font-merriweather font-medium text-slate-800 px-2">{reportCard.disciplineRemark}</span>
         </div>
         
         <div className="flex items-end gap-2">
           <span className="font-bold whitespace-nowrap">Overall Remarks:</span>
-          <span className="flex-1 border-b border-black pb-0.5">{reportCard.overallRemark}</span>
+          <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 px-2">{reportCard.overallRemark}</span>
         </div>
       </div>
 
       <div className="mt-24 flex justify-between font-serif text-sm font-bold">
-        <div>Parent's Signature</div>
         <div>Class Teacher's Signature</div>
+        <div>Principal signature</div>
       </div>
 
     </div>
