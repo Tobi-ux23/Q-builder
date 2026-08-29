@@ -16,9 +16,10 @@ import {
 } from "lucide-react";
 
 const EMPTY_REPORT_CARD: ReportCard = {
-  schoolName: "",
-  schoolAddress: "",
-  academicYear: "",
+  schoolName: "T.L.T. Sports Academy",
+  schoolSubheading: "ꯇꯤ.ꯑꯦꯜ.ꯇꯤ. ꯁ꯭ꯄꯣꯔꯠꯁ ꯑꯦꯀꯥꯗꯦꯃꯤ",
+  schoolAddress: "Tharoijam, Imphal",
+  academicYear: "2026-27",
   studentName: "",
   className: "",
   section: "",
@@ -127,6 +128,13 @@ export function ReportCardApp() {
         quality: 0.98,
         backgroundColor: "#ffffff",
         pixelRatio: 2,
+        width: element.scrollWidth,
+        height: Math.max(element.scrollHeight, element.offsetHeight),
+        style: {
+          transform: "scale(1)",
+          transformOrigin: "top left",
+          margin: "0",
+        }
       });
 
       element.style.boxShadow = originalShadow;

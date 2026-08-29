@@ -36,6 +36,7 @@ export interface ReportCard {
   id?: string;
   updatedAt?: number;
   schoolName: string;
+  schoolSubheading?: string;
   schoolAddress: string;
   academicYear: string;
   studentName: string;

@@ -74,9 +74,10 @@ export const SAMPLE_MATH_PAPER: QuestionPaper = {
 };
 
 export const SAMPLE_REPORT_CARD: ReportCard = {
-  schoolName: "XYZ SCHOOL",
-  schoolAddress: "abc place, Imphal",
-  academicYear: "2023-24",
+  schoolName: "T.L.T. Sports Academy",
+  schoolSubheading: "ꯇꯤ.ꯑꯦꯜ.ꯇꯤ. ꯁ꯭ꯄꯣꯔꯠꯁ ꯑꯦꯀꯥꯗꯦꯃꯤ",
+  schoolAddress: "Tharoijam, Imphal",
+  academicYear: "2026-27",
   studentName: "",
   className: "",
   section: "",

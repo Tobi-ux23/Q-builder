@@ -131,7 +131,17 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
               value={reportCard.schoolName}
               onChange={(e) => handleChange("schoolName", e.target.value)}
               className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-              placeholder="XYZ SCHOOL"
+              placeholder="T.L.T. Sports Academy"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-600 mb-1">School Subheading (Optional)</label>
+            <input
+              type="text"
+              value={reportCard.schoolSubheading || ""}
+              onChange={(e) => handleChange("schoolSubheading", e.target.value)}
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+              placeholder="ꯇꯤ.ꯑꯦꯜ.ꯇꯤ. ꯁ꯭ꯄꯣꯔꯠꯁ ꯑꯦꯀꯥꯗꯦꯃꯤ"
             />
           </div>
           <div>
@@ -141,7 +151,7 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
               value={reportCard.schoolAddress}
               onChange={(e) => handleChange("schoolAddress", e.target.value)}
               className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-              placeholder="abc place, Imphal"
+              placeholder="Tharoijam, Imphal"
             />
           </div>
           <div>
@@ -151,7 +161,7 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
               value={reportCard.academicYear}
               onChange={(e) => handleChange("academicYear", e.target.value)}
               className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-              placeholder="2023-24"
+              placeholder="2026-27"
             />
           </div>
         </div>

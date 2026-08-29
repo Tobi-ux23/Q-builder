@@ -23,7 +23,9 @@ import {
   Save,
   Settings,
   Clock,
-  Check
+  Check,
+  Menu,
+  X
 } from "lucide-react";
 
 const EMPTY_PAPER: QuestionPaper = {
@@ -63,6 +65,7 @@ export default function App() {
   const [showPassword, setShowPassword] = useState(false);
   const [showLockConfirm, setShowLockConfirm] = useState(false);
   const [currentApp, setCurrentApp] = useState<"question-paper" | "report-card">("question-paper");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Password in localStorage (default is 'admin457*')
   const [masterPassword, setMasterPassword] = useState(() => {
@@ -339,6 +342,13 @@ export default function App() {
       <header className="no-print sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-4">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center space-x-3 self-start sm:self-auto">
+            <button
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="p-2 border border-slate-200 hover:border-slate-300 text-slate-600 hover:text-slate-900 bg-white rounded-md transition-all cursor-pointer shadow-sm hover:bg-slate-50 mr-2"
+              title="Menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
             <div className="bg-blue-600 text-white p-2 rounded flex items-center justify-center">
               <GraduationCap className="w-6 h-6" />
             </div>
@@ -357,43 +367,78 @@ export default function App() {
               </p>
             </div>
           </div>
-
-          <div className="flex bg-slate-100 rounded-lg p-1 border border-slate-200">
-            <button
-              onClick={() => setCurrentApp("question-paper")}
-              className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                currentApp === "question-paper"
-                  ? "bg-white text-blue-600 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700"
-              }`}
-            >
-              Question Papers
-            </button>
-            <button
-              onClick={() => setCurrentApp("report-card")}
-              className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                currentApp === "report-card"
-                  ? "bg-white text-blue-600 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700"
-              }`}
-            >
-              Report Cards
-            </button>
-          </div>
-
-          {/* Locking & Lock Status Header Actions */}
-          <div className="flex items-center space-x-3 self-end sm:self-auto">
-            <button
-              onClick={() => setShowLockConfirm(true)}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 border border-slate-200 hover:border-slate-300 text-slate-600 hover:text-slate-900 bg-white rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm hover:bg-slate-50"
-              title="Lock active session with password"
-            >
-              <Lock className="w-3.5 h-3.5 text-slate-500" />
-              <span>Lock Portal</span>
-            </button>
-          </div>
         </div>
       </header>
+
+      {/* Slide Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="no-print fixed inset-0 z-50 flex justify-start">
+          <div 
+            className="absolute inset-0 bg-slate-900/20 backdrop-blur-sm" 
+            onClick={() => setIsMobileMenuOpen(false)}
+          ></div>
+          <div className="relative w-72 h-full bg-white shadow-2xl flex flex-col transform transition-transform animate-in slide-in-from-left duration-300">
+            <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+              <span className="font-bold text-slate-800 tracking-wide">Menu</span>
+              <button 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2 text-slate-500 hover:text-slate-800 bg-white border border-slate-200 hover:border-slate-300 rounded-md cursor-pointer transition-colors shadow-sm"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4 space-y-6">
+              
+              <div className="space-y-2">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Apps</p>
+                <button
+                  onClick={() => {
+                    setCurrentApp("question-paper");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center px-4 py-3 rounded-md text-sm font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                    currentApp === "question-paper"
+                      ? "bg-blue-50 text-blue-700 shadow-sm border border-blue-200"
+                      : "text-slate-600 hover:bg-slate-50 border border-transparent"
+                  }`}
+                >
+                  Question Papers
+                </button>
+                <button
+                  onClick={() => {
+                    setCurrentApp("report-card");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center px-4 py-3 rounded-md text-sm font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                    currentApp === "report-card"
+                      ? "bg-blue-50 text-blue-700 shadow-sm border border-blue-200"
+                      : "text-slate-600 hover:bg-slate-50 border border-transparent"
+                  }`}
+                >
+                  Report Cards
+                </button>
+              </div>
+
+              <div className="pt-6 border-t border-slate-200 space-y-2">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Security</p>
+                <button
+                  onClick={() => {
+                    setShowLockConfirm(true);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full flex items-center justify-center space-x-2 px-4 py-3 border border-slate-200 hover:border-slate-300 text-slate-600 hover:text-slate-900 bg-white rounded-md text-sm font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm hover:bg-slate-50"
+                  title="Lock active session with password"
+                >
+                  <Lock className="w-4 h-4 text-slate-500" />
+                  <span>Lock Portal</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Workspace Layout */}
       {currentApp === "question-paper" ? (
