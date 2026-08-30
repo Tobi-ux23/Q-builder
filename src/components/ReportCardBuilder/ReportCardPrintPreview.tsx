@@ -25,6 +25,16 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
     };
   };
 
+  const tableCellStyle = {
+    padding: `${reportCard.tablePadding ?? 12}px`,
+    lineHeight: reportCard.tableLineHeight ?? 1.5
+  };
+  
+  const tableHeaderStyle = {
+    padding: `${Math.max(2, (reportCard.tablePadding ?? 12) - 4)}px`,
+    lineHeight: reportCard.tableLineHeight ?? 1.5
+  };
+
   return (
     <>
       <style type="text/css">
@@ -97,18 +107,18 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
       <table className="w-full border-collapse border border-black text-center font-serif text-sm mb-8">
         <thead>
           <tr>
-            <th className="border border-black p-2 font-bold align-middle w-24">
+            <th className="border border-black font-bold align-middle w-24" style={tableHeaderStyle}>
               Assessment
             </th>
             {reportCard.subjects.map((sub, idx) => (
-              <th key={idx} className="border border-black p-2 font-bold align-middle break-words max-w-[80px]">
+              <th key={idx} className="border border-black font-bold align-middle break-words max-w-[80px]" style={tableHeaderStyle}>
                 {sub}
               </th>
             ))}
-            <th className="border border-black p-2 font-bold align-middle break-words max-w-[80px]">
+            <th className="border border-black font-bold align-middle break-words max-w-[80px]" style={tableHeaderStyle}>
               TOTAL
             </th>
-            <th className="border border-black p-2 font-bold align-middle break-words max-w-[80px]">
+            <th className="border border-black font-bold align-middle break-words max-w-[80px]" style={tableHeaderStyle}>
               PERCENTAGE
             </th>
           </tr>
@@ -118,7 +128,7 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
             const metrics = getRowMetrics(a.subjectMarks, reportCard.subjects);
             return (
             <tr key={idx}>
-              <td className="border border-black p-3 font-bold">
+              <td className="border border-black font-bold" style={tableCellStyle}>
                 {a.assessmentName}
               </td>
               {reportCard.subjects.map((sub, sIdx) => {
@@ -127,14 +137,14 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
                 const displayVal = val ? `${val}/${maxVal}` : "";
                 
                 return (
-                <td key={sIdx} className="border border-black p-3 font-merriweather font-medium text-slate-800 text-[15px]">
+                <td key={sIdx} className="border border-black font-merriweather font-medium text-slate-800 text-[15px]" style={tableCellStyle}>
                   {displayVal}
                 </td>
               )})}
-              <td className="border border-black p-3 font-merriweather font-bold text-slate-900 text-[15px]">
+              <td className="border border-black font-merriweather font-bold text-slate-900 text-[15px]" style={tableCellStyle}>
                 {metrics.total}
               </td>
-              <td className="border border-black p-3 font-merriweather font-bold text-slate-900 text-[15px]">
+              <td className="border border-black font-merriweather font-bold text-slate-900 text-[15px]" style={tableCellStyle}>
                 {metrics.percentage}
               </td>
             </tr>

@@ -49,5 +49,9 @@ export interface ReportCard {
   sportsRemark: string;
   disciplineRemark: string;
   overallRemark: string;
+  
+  // Layout Options
+  tablePadding?: number;
+  tableLineHeight?: number;
 }
 

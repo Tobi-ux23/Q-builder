@@ -371,6 +371,46 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
           </div>
         </div>
       </div>
+
+      <div className="bg-white border border-slate-200 p-5 rounded-lg shadow-sm">
+        <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">
+          Layout Density
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <div className="flex justify-between mb-1">
+              <label className="block text-xs font-semibold text-slate-600">Table Cell Padding</label>
+              <span className="text-xs font-bold text-blue-600">{reportCard.tablePadding ?? 12}px</span>
+            </div>
+            <input
+              type="range"
+              min="2"
+              max="24"
+              step="1"
+              value={reportCard.tablePadding ?? 12}
+              onChange={(e) => handleChange("tablePadding", parseInt(e.target.value))}
+              className="w-full accent-blue-600"
+            />
+            <p className="text-[10px] text-slate-500 mt-1">Adjust the inner spacing of the subjects table cells.</p>
+          </div>
+          <div>
+            <div className="flex justify-between mb-1">
+              <label className="block text-xs font-semibold text-slate-600">Table Line Height</label>
+              <span className="text-xs font-bold text-blue-600">{reportCard.tableLineHeight ?? 1.5}</span>
+            </div>
+            <input
+              type="range"
+              min="1.0"
+              max="3.0"
+              step="0.1"
+              value={reportCard.tableLineHeight ?? 1.5}
+              onChange={(e) => handleChange("tableLineHeight", parseFloat(e.target.value))}
+              className="w-full accent-blue-600"
+            />
+            <p className="text-[10px] text-slate-500 mt-1">Adjust the vertical height of text inside the table.</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
