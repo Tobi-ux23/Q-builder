@@ -16,12 +16,12 @@ export const HeaderForm: React.FC<HeaderFormProps> = ({ paper, onChange }) => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6 space-y-6">
+    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm p-6 space-y-6">
       <div className="flex items-center space-x-2 pb-4 border-b border-slate-200">
         <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
           <div className="w-4 h-4 border-2 border-white"></div>
         </div>
-        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-800">Header Configuration</h2>
+        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-slate-200">Header Configuration</h2>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

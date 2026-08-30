@@ -37,14 +37,14 @@ export const GoogleDocExport: React.FC<GoogleDocExportProps> = ({ paper }) => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6 space-y-4">
+    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm p-6 space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
               <FileText className="w-4 h-4 text-white" />
             </div>
-            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-800">Google Doc Format</h2>
+            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-slate-200">Google Doc Format</h2>
           </div>
           <p className="text-xs text-slate-400 mt-1.5">
             Copy or download this text. It preserves perfect tabs (\t) for copy-pasting directly into Google Docs.
@@ -104,7 +104,7 @@ export const GoogleDocExport: React.FC<GoogleDocExportProps> = ({ paper }) => {
       </div>
 
       <div className="bg-slate-50 border border-slate-200 rounded p-4 text-xs text-slate-600 leading-relaxed">
-        <strong className="text-slate-800 font-bold uppercase tracking-wider text-[10px] block mb-1">💡 Google Docs Compatibility:</strong>
+        <strong className="text-slate-800 dark:text-slate-200 font-bold uppercase tracking-wider text-[10px] block mb-1">💡 Google Docs Compatibility:</strong>
         Standard text is fully supported with tabs. If you download the <strong>Word File (.doc)</strong>, you can upload it or drag-and-drop directly into Google Drive or open in Google Docs. It will preserve centered headers and precise margins automatically!
       </div>
     </div>

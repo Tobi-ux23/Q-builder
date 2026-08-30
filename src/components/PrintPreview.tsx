@@ -344,18 +344,18 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({ paper }) => {
   return (
     <div className="space-y-4">
       {/* Action panel */}
-      <div className="no-print bg-white border border-slate-200 rounded-lg p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+      <div className="no-print bg-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 rounded-lg p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
         <div className="flex items-center space-x-2 self-start sm:self-auto">
           <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
             <Printer className="w-4 h-4 text-white" />
           </div>
-          <span className="text-sm font-bold uppercase tracking-wider text-slate-800">Export &amp; Print</span>
+          <span className="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">Export &amp; Print</span>
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <button
             onClick={handleDownloadPDF}
             disabled={isExporting}
-            className="flex-1 sm:flex-initial flex items-center justify-center space-x-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider px-4 py-2.5 rounded transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 sm:flex-initial flex items-center justify-center space-x-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 text-xs font-bold uppercase tracking-wider px-4 py-2.5 rounded transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isExporting ? (
               <>
@@ -378,7 +378,7 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({ paper }) => {
         className="absolute top-0 left-0 -z-50 invisible pointer-events-none"
         style={{ width: "210mm" }}
       >
-        <div className="p-[20mm] bg-white font-serif" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
+        <div className="p-[20mm] bg-white text-black font-serif" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
           {/* Header section inside .measure-header */}
           <div className="measure-header text-center pb-4 border-b-2 border-black mb-4">
             <h1 className="text-2xl font-bold tracking-wide uppercase">
@@ -450,7 +450,7 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({ paper }) => {
       </div>
 
       {/* Visual A4 paper sheets container */}
-      <div className="flex flex-col items-center gap-6 bg-slate-100 p-4 md:p-6 rounded-lg border border-slate-200 overflow-x-auto">
+      <div className="flex flex-col items-center gap-6 bg-slate-100 dark:bg-slate-700 p-4 md:p-6 rounded-lg border border-slate-200 overflow-x-auto">
         {paginatedPages.map((questions, pageIdx) => {
           const isFirst = pageIdx === 0;
           return (

@@ -51,7 +51,7 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
           }
         `}
       </style>
-      <div className="report-card-print-target bg-white mx-auto shadow-sm print:shadow-none mb-8 relative border border-slate-200 print:border-none" style={{ width: "297mm", minHeight: "210mm", padding: "15mm" }}>
+      <div className="report-card-print-target bg-white text-black mx-auto shadow-sm print:shadow-none mb-8 relative border border-slate-200 print:border-none" style={{ width: "297mm", minHeight: "210mm", padding: "15mm" }}>
         
         {/* Decorative Classic Border */}
         <div className="absolute inset-[10mm] border-[3px] border-slate-800 pointer-events-none rounded-md opacity-90 z-0"></div>
@@ -157,19 +157,20 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
         <div className="font-bold mb-2">Remarks in :</div>
         <div className="flex items-baseline gap-2">
           <span className="font-bold whitespace-nowrap">Sports:</span>
-          <span className="flex-1 border-b border-black pb-0.5 min-w-[200px] font-merriweather font-medium text-slate-800 px-2">{reportCard.sportsRemark}</span>
+          <span className="flex-1 border-b border-black pb-0.5 min-w-[150px] font-merriweather font-medium text-slate-800 text-[12px] px-2">{reportCard.sportsRemark}</span>
           <span className="font-bold whitespace-nowrap ml-4">Discipline:</span>
-          <span className="flex-1 border-b border-black pb-0.5 min-w-[200px] font-merriweather font-medium text-slate-800 px-2">{reportCard.disciplineRemark}</span>
+          <span className="flex-1 border-b border-black pb-0.5 min-w-[150px] font-merriweather font-medium text-slate-800 text-[12px] px-2">{reportCard.disciplineRemark}</span>
         </div>
         
         <div className="flex items-baseline gap-2">
           <span className="font-bold whitespace-nowrap">Overall Remarks:</span>
-          <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 px-2">{reportCard.overallRemark}</span>
+          <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 text-[12px] px-2">{reportCard.overallRemark}</span>
         </div>
       </div>
 
       <div className="mt-24 flex justify-between font-serif text-sm font-bold px-8">
-        <div>Class Teacher's Signature</div>
+        <div>Parent's signature</div>
+        <div>Class teacher's signature</div>
         <div>Principal signature</div>
       </div>
 

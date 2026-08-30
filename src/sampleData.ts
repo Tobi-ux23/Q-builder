@@ -96,7 +96,7 @@ export const SAMPLE_REPORT_CARD: ReportCard = {
     { assessmentName: "FA-II", subjectMarks: {} },
     { assessmentName: "SA-I", subjectMarks: {} }
   ],
-  sportsRemark: "",
-  disciplineRemark: "",
-  overallRemark: ""
+  sportsRemark: "Shows high energy, active participation, and great sportsmanship.",
+  disciplineRemark: "Courteous, reliable, and self-disciplined.",
+  overallRemark: "Excellent attitude, consistent effort, and good potential."
 };

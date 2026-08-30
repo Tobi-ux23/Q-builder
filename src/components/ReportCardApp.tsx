@@ -30,9 +30,9 @@ const EMPTY_REPORT_CARD: ReportCard = {
     "Subject 2": "100",
   },
   assessments: [{ assessmentName: "Term 1", subjectMarks: {} }],
-  sportsRemark: "",
-  disciplineRemark: "",
-  overallRemark: ""
+  sportsRemark: "Shows high energy, active participation, and great sportsmanship.",
+  disciplineRemark: "Courteous, reliable, and self-disciplined.",
+  overallRemark: "Excellent attitude, consistent effort, and good potential."
 };
 
 const generateId = () => "report-" + Math.random().toString(36).substring(2, 11) + "-" + Date.now().toString(36);
@@ -49,7 +49,12 @@ function formatRelativeTime(timestamp?: number): string {
   return `${days}d ago`;
 }
 
-export function ReportCardApp() {
+interface ReportCardAppProps {
+  activePage: "edit" | "preview";
+  setActivePage: (page: "edit" | "preview") => void;
+}
+
+export function ReportCardApp({ activePage, setActivePage }: ReportCardAppProps) {
   const [history, setHistory] = useState<ReportCard[]>(() => {
     const saved = localStorage.getItem("report-card-builder-history");
     if (saved) {
@@ -89,7 +94,6 @@ export function ReportCardApp() {
     updatedAt: Date.now(),
   };
 
-  const [activePage, setActivePage] = useState<"edit" | "preview">("edit");
   const [isExporting, setIsExporting] = useState(false);
 
   useEffect(() => {
@@ -234,43 +238,17 @@ export function ReportCardApp() {
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
       
-      {/* Page Switcher Navigation */}
-      <div className="no-print flex rounded-lg bg-slate-200/60 p-1 mb-6 border border-slate-300 max-w-md mx-auto shadow-sm">
-        <button
-          onClick={() => setActivePage("edit")}
-          className={`flex-1 flex items-center justify-center space-x-2 py-3 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-            activePage === "edit"
-              ? "bg-slate-900 text-white shadow-sm"
-              : "text-slate-500 hover:text-slate-900"
-          }`}
-        >
-          <Edit3 className="w-4 h-4" />
-          <span>1. Edit Card</span>
-        </button>
-        <button
-          onClick={() => setActivePage("preview")}
-          className={`flex-1 flex items-center justify-center space-x-2 py-3 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-            activePage === "preview"
-              ? "bg-slate-900 text-white shadow-sm"
-              : "text-slate-500 hover:text-slate-900"
-          }`}
-        >
-          <Eye className="w-4 h-4" />
-          <span>2. Preview &amp; Print</span>
-        </button>
-      </div>
-
       <div className="space-y-6">
         
         {activePage === "edit" && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* Drafts History Sidebar Panel (Span 4) */}
-            <div className="no-print lg:col-span-4 bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden sticky lg:top-24">
-              <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+            <div className="no-print lg:col-span-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm overflow-hidden sticky lg:top-24">
+              <div className="p-4 border-b border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/50 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-slate-500" />
-                  <h2 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  <Clock className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                  <h2 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                     Drafts &amp; History ({history.length})
                   </h2>
                 </div>
@@ -299,29 +277,29 @@ export function ReportCardApp() {
                       onClick={() => setActiveId(p.id || "")}
                       className={`group relative p-3 rounded border text-left transition-all cursor-pointer ${
                         isActive
-                          ? "bg-blue-50/60 border-blue-400 shadow-sm"
-                          : "bg-white border-slate-200 hover:bg-slate-50/50"
+                          ? "bg-blue-50/60 dark:bg-blue-900/20 border-blue-400 dark:border-blue-500 shadow-sm"
+                          : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-700/50"
                       }`}
                     >
                       <div className="pr-16">
-                        <div className={`font-semibold text-sm truncate ${isActive ? "text-blue-900 font-bold" : "text-slate-800"}`}>
+                        <div className={`font-semibold text-sm truncate ${isActive ? "text-blue-900 dark:text-blue-400 font-bold" : "text-slate-800 dark:text-slate-200"}`}>
                           {title}
                         </div>
-                        <div className="text-xs text-slate-500 truncate mt-0.5">
+                        <div className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
                           {meta}
                         </div>
-                        <div className="text-[10px] text-slate-400 mt-1.5 flex items-center space-x-1 font-medium">
-                          <Clock className="w-3 h-3 text-slate-300" />
+                        <div className="text-[10px] text-slate-400 dark:text-slate-500 mt-1.5 flex items-center space-x-1 font-medium">
+                          <Clock className="w-3 h-3 text-slate-300 dark:text-slate-600" />
                           <span>{formattedTime}</span>
                         </div>
                       </div>
 
                       {/* Action buttons */}
-                      <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center space-x-1 bg-white group-hover:opacity-100 opacity-80 sm:opacity-0 group-hover:pointer-events-auto sm:pointer-events-none transition-all p-1 rounded border border-slate-100/50 shadow-sm">
+                      <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center space-x-1 bg-white dark:bg-slate-800 group-hover:opacity-100 opacity-80 sm:opacity-0 group-hover:pointer-events-auto sm:pointer-events-none transition-all p-1 rounded border border-slate-100/50 dark:border-slate-700 shadow-sm">
                         <button
                           onClick={(e) => handleDuplicate(p.id || "", e)}
                           title="Duplicate draft"
-                          className="p-1.5 text-slate-500 hover:text-slate-800 rounded hover:bg-slate-100 cursor-pointer"
+                          className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 rounded hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
                         >
                           <Copy className="w-3.5 h-3.5" />
                         </button>
@@ -333,7 +311,7 @@ export function ReportCardApp() {
                                 e.stopPropagation();
                                 confirmDelete(p.id || "");
                               }}
-                              className="px-2 py-1 bg-red-600 text-white text-[9px] font-bold uppercase tracking-wider rounded hover:bg-red-700 cursor-pointer"
+                              className="px-2 py-1 bg-red-600 dark:bg-red-700 text-white text-[9px] font-bold uppercase tracking-wider rounded hover:bg-red-700 dark:hover:bg-red-600 cursor-pointer"
                             >
                               Del
                             </button>
@@ -342,7 +320,7 @@ export function ReportCardApp() {
                                 e.stopPropagation();
                                 setDeletingId(null);
                               }}
-                              className="px-1.5 py-1 bg-slate-200 text-slate-600 text-[9px] font-bold uppercase tracking-wider rounded hover:bg-slate-300 cursor-pointer"
+                              className="px-1.5 py-1 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[9px] font-bold uppercase tracking-wider rounded hover:bg-slate-300 dark:hover:bg-slate-600 cursor-pointer"
                             >
                               X
                             </button>
@@ -354,7 +332,7 @@ export function ReportCardApp() {
                                 setDeletingId(p.id || null);
                             }}
                             title="Delete draft"
-                            className="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded cursor-pointer"
+                            className="p-1.5 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 rounded cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -374,14 +352,14 @@ export function ReportCardApp() {
 
         {activePage === "preview" && (
           <div className="space-y-6">
-            <div className="no-print bg-white border border-slate-200 rounded p-2.5 flex items-center justify-between gap-3 shadow-sm max-w-4xl mx-auto">
+            <div className="no-print bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded p-2.5 flex items-center justify-between gap-3 shadow-sm max-w-4xl mx-auto">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest pl-1.5">
                 Output Viewer
               </span>
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => window.print()}
-                  className="flex items-center justify-center space-x-1.5 px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-all cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shadow-sm"
+                  className="flex items-center justify-center space-x-1.5 px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-all cursor-pointer bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 shadow-sm"
                 >
                   <Printer className="w-3.5 h-3.5" />
                   <span>Print</span>
