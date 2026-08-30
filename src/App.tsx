@@ -57,6 +57,13 @@ function formatRelativeTime(timestamp?: number): string {
   return `${days}d ago`;
 }
 
+async function hashString(message: string): Promise<string> {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 export default function App() {
   // 1. AUTHENTICATION STATE
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -69,10 +76,6 @@ export default function App() {
   const [currentApp, setCurrentApp] = useState<"question-paper" | "report-card">("question-paper");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Password in localStorage (default is 'admin457*')
-  const [masterPassword, setMasterPassword] = useState(() => {
-    return localStorage.getItem("question-paper-builder-password") || "admin457*";
-  });
   const [newPasswordInput, setNewPasswordInput] = useState("");
   const [passwordSuccessMessage, setPasswordSuccessMessage] = useState("");
   const [showSettingsPanel, setShowSettingsPanel] = useState(false);
@@ -172,12 +175,28 @@ export default function App() {
   }, [activeId]);
 
   // Auth logins/logout handlers
-  const handleLogin = (e: FormEvent) => {
+  const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     if (lockoutRemaining > 0) return;
 
-    const correctPassword = localStorage.getItem("question-paper-builder-password") || "admin457*";
-    if (passwordInput === correctPassword) {
+    const hashedInput = await hashString(passwordInput);
+    const storedSecret = localStorage.getItem("question-paper-builder-password");
+    
+    let isCorrect = false;
+    if (!storedSecret) {
+      isCorrect = (hashedInput === "495751d2af203c4a09a368dddd03637f4702cba34bd4191772d203605d11a0a0");
+    } else {
+      if (/^[a-f0-9]{64}$/.test(storedSecret)) {
+        isCorrect = (hashedInput === storedSecret);
+      } else {
+        if (passwordInput === storedSecret) {
+          isCorrect = true;
+          localStorage.setItem("question-paper-builder-password", hashedInput);
+        }
+      }
+    }
+
+    if (isCorrect) {
       setIsAuthenticated(true);
       sessionStorage.setItem("question-paper-builder-auth", "true");
       setPasswordInput("");
@@ -200,14 +219,14 @@ export default function App() {
     sessionStorage.removeItem("question-paper-builder-auth");
   };
 
-  const handlePasswordChange = (e: FormEvent) => {
+  const handlePasswordChange = async (e: FormEvent) => {
     e.preventDefault();
     if (!newPasswordInput.trim()) {
       setPasswordSuccessMessage("");
       return;
     }
-    localStorage.setItem("question-paper-builder-password", newPasswordInput.trim());
-    setMasterPassword(newPasswordInput.trim());
+    const hashedNewPassword = await hashString(newPasswordInput.trim());
+    localStorage.setItem("question-paper-builder-password", hashedNewPassword);
     setNewPasswordInput("");
     setPasswordSuccessMessage("Password changed successfully!");
     setTimeout(() => setPasswordSuccessMessage(""), 3000);
@@ -646,9 +665,9 @@ export default function App() {
                         <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
                           Current Master Password
                         </label>
-                        <div className="text-xs font-mono bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-2.5 py-1.5 text-slate-600 dark:text-slate-300 flex justify-between items-center select-all">
-                          <span>{masterPassword}</span>
-                          <span className="text-[9px] uppercase font-bold text-slate-400">Master</span>
+                        <div className="text-xs font-mono bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-2.5 py-1.5 text-slate-400 dark:text-slate-500 flex justify-between items-center">
+                          <span>••••••••••••</span>
+                          <span className="text-[9px] uppercase font-bold text-green-500">Secured</span>
                         </div>
                       </div>
 
