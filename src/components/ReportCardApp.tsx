@@ -25,11 +25,7 @@ const EMPTY_REPORT_CARD: ReportCard = {
   section: "",
   rollNo: "",
   subjects: ["Subject 1", "Subject 2"],
-  subjectFullMarks: {
-    "Subject 1": "100",
-    "Subject 2": "100",
-  },
-  assessments: [{ assessmentName: "Term 1", subjectMarks: {} }],
+  assessments: [{ assessmentName: "Term 1", maxMarks: "100", attendance: "", subjectMarks: {} }],
   sportsRemark: "Shows high energy, active participation, and great sportsmanship.",
   disciplineRemark: "Courteous, reliable, and self-disciplined.",
   overallRemark: "Excellent attitude, consistent effort, and good potential."
@@ -244,7 +240,7 @@ export function ReportCardApp({ activePage, setActivePage }: ReportCardAppProps)
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* Drafts History Sidebar Panel (Span 4) */}
-            <div className="no-print lg:col-span-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm overflow-hidden sticky lg:top-24">
+            <div className="no-print lg:col-span-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm overflow-hidden sticky lg:top-24">
               <div className="p-4 border-b border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/50 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4 text-slate-500 dark:text-slate-400" />
@@ -266,8 +262,9 @@ export function ReportCardApp({ activePage, setActivePage }: ReportCardAppProps)
                   const isActive = p.id === activeId;
                   const title = p.studentName.trim() || "Untitled Student";
                   const meta = [
-                    p.className.trim() || "Draft Class",
-                    p.section.trim() || "Draft Sec"
+                    p.className.trim() || "Class",
+                    p.section.trim() || "Sec",
+                    p.rollNo?.trim() ? `Roll ${p.rollNo.trim()}` : ""
                   ].filter(Boolean).join(" • ");
                   const formattedTime = formatRelativeTime(p.updatedAt);
 
@@ -344,7 +341,7 @@ export function ReportCardApp({ activePage, setActivePage }: ReportCardAppProps)
               </div>
             </div>
 
-            <div className="lg:col-span-8 space-y-6">
+            <div className="lg:col-span-9 space-y-6">
               <ReportCardForm reportCard={reportCard} onChange={handleReportCardChange} />
             </div>
           </div>

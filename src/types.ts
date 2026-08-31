@@ -29,6 +29,8 @@ export interface QuestionPaper {
 
 export interface AssessmentRecord {
   assessmentName: string;
+  maxMarks?: string;
+  attendance?: string;
   subjectMarks: Record<string, string>; // key: subject name, value: mark
 }
 
@@ -36,6 +38,7 @@ export interface ReportCard {
   id?: string;
   updatedAt?: number;
   schoolName: string;
+  schoolLogo?: string;
   schoolSubheading?: string;
   schoolAddress: string;
   academicYear: string;

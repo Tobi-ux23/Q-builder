@@ -1,5 +1,6 @@
+import React, { useState } from "react";
 import { ReportCard } from "../../types";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Image, ChevronDown, ChevronUp } from "lucide-react";
 
 interface Props {
   reportCard: ReportCard;
@@ -34,8 +35,26 @@ const REMARK_PRESETS = [
 ];
 
 export function ReportCardForm({ reportCard, onChange }: Props) {
+  const [isSchoolDetailsOpen, setIsSchoolDetailsOpen] = useState(true);
+
   const handleChange = (field: keyof ReportCard, value: any) => {
     onChange({ ...reportCard, [field]: value });
+  };
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        handleChange("schoolLogo", reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveLogo = () => {
+    const { schoolLogo, ...rest } = reportCard;
+    onChange(rest as ReportCard);
   };
 
   const handleAssessmentMarkChange = (assessmentIndex: number, subjectName: string, value: string) => {
@@ -50,11 +69,11 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
     handleChange("assessments", newAssessments);
   };
 
-  const handleAssessmentNameChange = (assessmentIndex: number, value: string) => {
+  const handleAssessmentFieldChange = (assessmentIndex: number, field: keyof import("../../types").AssessmentRecord, value: string) => {
     const newAssessments = [...reportCard.assessments];
     newAssessments[assessmentIndex] = {
       ...newAssessments[assessmentIndex],
-      assessmentName: value,
+      [field]: value,
     };
     handleChange("assessments", newAssessments);
   };
@@ -62,7 +81,7 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
   const addAssessment = () => {
     handleChange("assessments", [
       ...reportCard.assessments,
-      { assessmentName: `Assessment ${reportCard.assessments.length + 1}`, subjectMarks: {} },
+      { assessmentName: `Assessment ${reportCard.assessments.length + 1}`, maxMarks: "100", attendance: "", subjectMarks: {} },
     ]);
   };
   
@@ -77,12 +96,6 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
     const newSubjects = [...reportCard.subjects];
     newSubjects[index] = value;
 
-    const newFullMarks = { ...(reportCard.subjectFullMarks || {}) };
-    if (oldSubject !== value) {
-      newFullMarks[value] = newFullMarks[oldSubject] || "100";
-      delete newFullMarks[oldSubject];
-    }
-
     const newAssessments = reportCard.assessments.map(a => {
       const newMarks = { ...a.subjectMarks };
       if (oldSubject !== value && newMarks[oldSubject] !== undefined) {
@@ -95,15 +108,8 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
     onChange({
       ...reportCard,
       subjects: newSubjects,
-      subjectFullMarks: newFullMarks,
       assessments: newAssessments
     });
-  };
-  
-  const handleSubjectFullMarkChange = (subjectName: string, maxMark: string) => {
-    const newFullMarks = { ...(reportCard.subjectFullMarks || {}) };
-    newFullMarks[subjectName] = maxMark;
-    handleChange("subjectFullMarks", newFullMarks);
   };
   
   const addSubject = () => {
@@ -114,8 +120,7 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
       counter++;
     }
     const newSubjects = [...reportCard.subjects, newName];
-    const newFullMarks = { ...(reportCard.subjectFullMarks || {}), [newName]: "100" };
-    onChange({ ...reportCard, subjects: newSubjects, subjectFullMarks: newFullMarks });
+    onChange({ ...reportCard, subjects: newSubjects });
   };
   
   const removeSubject = (index: number) => {
@@ -124,19 +129,18 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
     handleChange("subjects", newSubjects);
   };
 
-  const getRowMetrics = (subjectMarks: Record<string, string>, subjects: string[]) => {
+  const getRowMetrics = (assessment: import("../../types").AssessmentRecord, subjects: string[]) => {
     let total = 0;
-    let totalMax = 0;
     let count = 0;
     subjects.forEach((sub) => {
-      const val = parseFloat(subjectMarks[sub]);
+      const val = parseFloat(assessment.subjectMarks[sub]);
       if (!isNaN(val)) {
         total += val;
-        const maxVal = parseFloat(reportCard.subjectFullMarks?.[sub] || "100") || 100;
-        totalMax += maxVal;
         count += 1;
       }
     });
+    const maxVal = parseFloat(assessment.maxMarks || "100") || 100;
+    const totalMax = count * maxVal;
     const percentage = totalMax > 0 ? (total / totalMax) * 100 : 0;
     return {
       total: count > 0 ? total.toString() : "--",
@@ -147,10 +151,44 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
   return (
     <div className="space-y-6">
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg shadow-sm">
-        <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-4 border-b border-slate-100 dark:border-slate-700/50 pb-2">
-          Header Configuration
-        </h3>
+        <div 
+          className="flex justify-between items-center cursor-pointer mb-4 border-b border-slate-100 dark:border-slate-700/50 pb-2"
+          onClick={() => setIsSchoolDetailsOpen(!isSchoolDetailsOpen)}
+        >
+          <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
+            School Details
+          </h3>
+          {isSchoolDetailsOpen ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+        </div>
+        {isSchoolDetailsOpen && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="md:col-span-2">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">School Logo</label>
+            <div className="flex items-center gap-4">
+              {reportCard.schoolLogo ? (
+                <div className="relative group">
+                  <img src={reportCard.schoolLogo} alt="School Logo" className="h-16 w-16 object-contain bg-white border border-slate-200 dark:border-slate-700 rounded p-1" />
+                  <button 
+                    onClick={handleRemoveLogo}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                    title="Remove logo"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex-1 max-w-sm">
+                  <label className="flex items-center justify-center w-full h-12 px-4 transition bg-white dark:bg-slate-900/50 border-2 border-slate-300 dark:border-slate-700 border-dashed rounded-md appearance-none cursor-pointer hover:border-slate-400 dark:hover:border-slate-500 focus:outline-none">
+                    <span className="flex items-center space-x-2 text-sm text-slate-500 dark:text-slate-400">
+                      <Image className="w-4 h-4" />
+                      <span className="font-medium text-xs">Upload PNG/JPG</span>
+                    </span>
+                    <input type="file" name="file_upload" className="hidden" accept="image/png, image/jpeg, image/jpg" onChange={handleLogoUpload} />
+                  </label>
+                </div>
+              )}
+            </div>
+          </div>
           <div>
             <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">School Name</label>
             <input
@@ -192,14 +230,15 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
             />
           </div>
         </div>
+        )}
       </div>
 
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-lg shadow-sm">
         <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-4 border-b border-slate-100 dark:border-slate-700/50 pb-2">
           Student Information
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+          <div className="md:col-span-6">
             <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Student's Name</label>
             <input
               type="text"
@@ -208,7 +247,7 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
               className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 dark:text-white rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
-          <div>
+          <div className="md:col-span-2">
             <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Class</label>
             <input
               type="text"
@@ -217,7 +256,7 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
               className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 dark:text-white rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
-          <div>
+          <div className="md:col-span-2">
             <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Section</label>
             <input
               type="text"
@@ -226,7 +265,7 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
               className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 dark:text-white rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
-          <div>
+          <div className="md:col-span-2">
             <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Roll No</label>
             <input
               type="text"
@@ -246,7 +285,7 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
         </div>
         
         <div className="mb-4">
-          <label className="block text-xs font-semibold text-slate-600 mb-2">Configure Subjects &amp; Full Marks</label>
+          <label className="block text-xs font-semibold text-slate-600 mb-2">Configure Subjects</label>
           <div className="flex flex-wrap gap-3 items-start">
             {reportCard.subjects.map((sub, idx) => (
               <div key={idx} className="flex flex-col gap-1.5 bg-slate-100 dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-700 shadow-sm">
@@ -263,16 +302,6 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
-                </div>
-                <div className="flex items-center space-x-2 border-t border-slate-200 dark:border-slate-700/60 pt-1.5">
-                  <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Max:</span>
-                  <input
-                    type="text"
-                    value={reportCard.subjectFullMarks?.[sub] ?? "100"}
-                    onChange={(e) => handleSubjectFullMarkChange(sub, e.target.value)}
-                    className="w-16 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-xs px-1.5 py-0.5 dark:text-white rounded focus:outline-none focus:border-blue-400"
-                    placeholder="100"
-                  />
                 </div>
               </div>
             ))}
@@ -293,6 +322,9 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
                 <th className="border border-slate-200 dark:border-slate-700 p-2 text-left font-semibold text-slate-700 dark:text-slate-300 min-w-[120px]">
                   Assessment
                 </th>
+                <th className="border border-slate-200 dark:border-slate-700 p-2 text-center font-semibold text-slate-700 dark:text-slate-300 w-[80px]">
+                  Max Marks
+                </th>
                 {reportCard.subjects.map((subject, idx) => (
                   <th key={idx} className="border border-slate-200 dark:border-slate-700 p-2 text-center font-semibold text-slate-700 dark:text-slate-300 min-w-[100px]">
                     {subject}
@@ -304,6 +336,9 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
                 <th className="border border-slate-200 dark:border-slate-700 p-2 text-center font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 min-w-[100px]">
                   PERCENTAGE
                 </th>
+                <th className="border border-slate-200 dark:border-slate-700 p-2 text-center font-bold text-slate-700 dark:text-slate-300 min-w-[100px]">
+                  ATTENDANCE
+                </th>
                 <th className="border border-slate-200 dark:border-slate-700 p-2 text-center font-semibold text-slate-700 dark:text-slate-300 min-w-[50px]">
                   Actions
                 </th>
@@ -311,16 +346,25 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
             </thead>
             <tbody>
               {reportCard.assessments.map((assessment, aIdx) => {
-                const metrics = getRowMetrics(assessment.subjectMarks, reportCard.subjects);
+                const metrics = getRowMetrics(assessment, reportCard.subjects);
                 return (
                 <tr key={aIdx}>
                   <td className="border border-slate-200 dark:border-slate-700 p-2">
                     <input
                       type="text"
                       value={assessment.assessmentName}
-                      onChange={(e) => handleAssessmentNameChange(aIdx, e.target.value)}
+                      onChange={(e) => handleAssessmentFieldChange(aIdx, "assessmentName", e.target.value)}
                       className="w-full bg-transparent focus:outline-none font-medium"
                       placeholder="e.g. FA-I"
+                    />
+                  </td>
+                  <td className="border border-slate-200 dark:border-slate-700 p-2">
+                    <input
+                      type="text"
+                      value={assessment.maxMarks || "100"}
+                      onChange={(e) => handleAssessmentFieldChange(aIdx, "maxMarks", e.target.value)}
+                      className="w-full bg-transparent text-center focus:outline-none"
+                      placeholder="100"
                     />
                   </td>
                   {reportCard.subjects.map((subject, sIdx) => (
@@ -339,6 +383,15 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
                   </td>
                   <td className="border border-slate-200 dark:border-slate-700 p-2 text-center bg-slate-50 dark:bg-slate-700/50 font-bold text-slate-600 dark:text-slate-300">
                     {metrics.percentage}
+                  </td>
+                  <td className="border border-slate-200 dark:border-slate-700 p-2">
+                    <input
+                      type="text"
+                      value={assessment.attendance || ""}
+                      onChange={(e) => handleAssessmentFieldChange(aIdx, "attendance", e.target.value)}
+                      className="w-full bg-transparent text-center focus:outline-none"
+                      placeholder="e.g. 190/200"
+                    />
                   </td>
                   <td className="border border-slate-200 dark:border-slate-700 p-2 text-center">
                     <button
@@ -401,16 +454,7 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Discipline Remark</label>
-            <input
-              type="text"
-              value={reportCard.disciplineRemark}
-              onChange={(e) => handleChange("disciplineRemark", e.target.value)}
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 dark:text-white rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-            />
-          </div>
-          <div className="md:col-span-2">
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Overall Remarks</label>
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Overall</label>
             <input
               type="text"
               value={reportCard.overallRemark}

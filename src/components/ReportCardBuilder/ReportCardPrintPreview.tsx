@@ -5,19 +5,18 @@ interface Props {
 }
 
 export function ReportCardPrintPreview({ reportCard }: Props) {
-  const getRowMetrics = (subjectMarks: Record<string, string>, subjects: string[]) => {
+  const getRowMetrics = (assessment: import("../../types").AssessmentRecord, subjects: string[]) => {
     let total = 0;
-    let totalMax = 0;
     let count = 0;
     subjects.forEach((sub) => {
-      const val = parseFloat(subjectMarks[sub]);
+      const val = parseFloat(assessment.subjectMarks[sub]);
       if (!isNaN(val)) {
         total += val;
-        const maxVal = parseFloat(reportCard.subjectFullMarks?.[sub] || "100") || 100;
-        totalMax += maxVal;
         count += 1;
       }
     });
+    const maxVal = parseFloat(assessment.maxMarks || "100") || 100;
+    const totalMax = count * maxVal;
     const percentage = totalMax > 0 ? (total / totalMax) * 100 : 0;
     return {
       total: count > 0 ? `${total}/${totalMax}` : "",
@@ -51,56 +50,65 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
           }
         `}
       </style>
-      <div className="report-card-print-target bg-white text-black mx-auto shadow-sm print:shadow-none mb-8 relative border border-slate-200 print:border-none" style={{ width: "297mm", minHeight: "210mm", padding: "15mm" }}>
+      <div className="report-card-print-target bg-white text-black mx-auto shadow-sm print:shadow-none mb-8 relative border border-slate-200 print:border-none overflow-hidden" style={{ width: "297mm", height: "210mm", padding: "15mm" }}>
         
         {/* Decorative Classic Border */}
         <div className="absolute inset-[10mm] border-[3px] border-slate-800 pointer-events-none rounded-md opacity-90 z-0"></div>
         <div className="absolute inset-[11.5mm] border border-slate-800 pointer-events-none rounded-[4px] opacity-90 z-0"></div>
 
-        <div className="text-center font-serif text-black space-y-2 mb-10 relative z-10">
-        <h1 className="text-2xl font-bold uppercase tracking-wide">
-          {reportCard.schoolName || "T.L.T. Sports Academy"}
-        </h1>
-        {reportCard.schoolSubheading && (
-          <h2 className="text-base font-semibold text-slate-800">
-            {reportCard.schoolSubheading}
-          </h2>
-        )}
-        <p className="text-sm">
-          {reportCard.schoolAddress || "Tharoijam, Imphal"}
-        </p>
+        <div className="text-center font-serif text-black mb-10 relative z-10 flex flex-col items-center">
+        <div className="flex items-center justify-center mb-2 w-full relative">
+          {reportCard.schoolLogo && (
+            <div className="absolute left-10 md:left-24 top-1/2 -translate-y-1/2">
+              <img src={reportCard.schoolLogo} alt="Logo" className="w-24 h-24 object-contain shrink-0" />
+            </div>
+          )}
+          <div className="space-y-1 text-center">
+            <h1 className="text-3xl font-bold uppercase tracking-[0.15em] text-[#100E80]">
+              {reportCard.schoolName || "T.L.T. Sports Academy"}
+            </h1>
+            {reportCard.schoolSubheading && (
+              <h2 className="text-lg font-semibold text-slate-800">
+                {reportCard.schoolSubheading}
+              </h2>
+            )}
+            <p className="text-base">
+              {reportCard.schoolAddress || "Tharoijam, Imphal"}
+            </p>
+          </div>
+        </div>
         
-        <h2 className="text-xl font-bold uppercase mt-6 mb-2 underline underline-offset-4">
+        <h2 className="text-2xl font-bold uppercase mt-6 mb-2 underline underline-offset-4">
           REPORT CARD
         </h2>
-        <p className="text-sm font-bold">
+        <p className="text-base font-bold">
           Progress Report - Academic Year <span className="font-merriweather font-medium tracking-wide text-slate-800">{reportCard.academicYear || "2026-27"}</span>
         </p>
       </div>
 
-      <div className="font-serif text-sm space-y-4 mb-4">
+      <div className="font-serif text-base mb-3 grid grid-cols-2 gap-4 items-baseline">
         <div className="flex gap-2 items-baseline">
-          <span className="font-bold">Student's Name:</span>
-          <span className="flex-1 font-merriweather font-medium text-slate-900 text-[15px] border-b border-transparent pb-px">{reportCard.studentName}</span>
+          <span className="font-bold whitespace-nowrap">Student's Name:</span>
+          <span className="font-merriweather font-medium text-slate-900 text-[17px] border-b border-transparent pb-px whitespace-nowrap">{reportCard.studentName}</span>
         </div>
         
-        <div className="flex justify-start gap-24">
+        <div className="flex gap-8 items-baseline">
           <div className="flex gap-2 items-baseline">
             <span className="font-bold">Class:</span>
-            <span className="font-merriweather font-medium text-slate-900 border-b border-transparent pb-px px-1">{reportCard.className}</span>
+            <span className="font-merriweather font-medium text-slate-900 text-[17px] border-b border-transparent pb-px px-1 whitespace-nowrap">{reportCard.className}</span>
           </div>
           <div className="flex gap-2 items-baseline">
             <span className="font-bold">Section:</span>
-            <span className="font-merriweather font-medium text-slate-900 border-b border-transparent pb-px px-1">{reportCard.section}</span>
+            <span className="font-merriweather font-medium text-slate-900 text-[17px] border-b border-transparent pb-px px-1 whitespace-nowrap">{reportCard.section}</span>
           </div>
           <div className="flex gap-2 items-baseline">
-            <span className="font-bold">Roll No:</span>
-            <span className="font-merriweather font-medium text-slate-900 border-b border-transparent pb-px px-1">{reportCard.rollNo}</span>
+            <span className="font-bold whitespace-nowrap">Roll No:</span>
+            <span className="font-merriweather font-medium text-slate-900 text-[17px] border-b border-transparent pb-px px-1 whitespace-nowrap">{reportCard.rollNo}</span>
           </div>
         </div>
       </div>
 
-      <p className="font-serif text-sm mb-2">
+      <p className="font-serif text-base mb-2">
         The following are the marks obtained by the above student in the:
       </p>
 
@@ -121,18 +129,21 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
             <th className="border border-black font-bold align-middle break-words max-w-[80px]" style={tableHeaderStyle}>
               PERCENTAGE
             </th>
+            <th className="border border-black font-bold align-middle break-words max-w-[80px]" style={tableHeaderStyle}>
+              ATTENDANCE
+            </th>
           </tr>
         </thead>
         <tbody>
           {reportCard.assessments.map((a, idx) => {
-            const metrics = getRowMetrics(a.subjectMarks, reportCard.subjects);
+            const metrics = getRowMetrics(a, reportCard.subjects);
             return (
             <tr key={idx}>
               <td className="border border-black font-bold" style={tableCellStyle}>
                 {a.assessmentName}
               </td>
               {reportCard.subjects.map((sub, sIdx) => {
-                const maxVal = parseFloat(reportCard.subjectFullMarks?.[sub] || "100") || 100;
+                const maxVal = parseFloat(a.maxMarks || "100") || 100;
                 const val = a.subjectMarks[sub];
                 const displayVal = val ? `${val}/${maxVal}` : "";
                 
@@ -147,31 +158,31 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
               <td className="border border-black font-merriweather font-bold text-slate-900 text-[15px]" style={tableCellStyle}>
                 {metrics.percentage}
               </td>
+              <td className="border border-black font-merriweather font-bold text-slate-900 text-[15px]" style={tableCellStyle}>
+                {a.attendance || ""}
+              </td>
             </tr>
           )})}
           {/* Add empty rows to match layout if needed, but dynamic is better */}
         </tbody>
       </table>
 
-      <div className="font-serif text-sm space-y-6">
-        <div className="font-bold mb-2">Remarks in :</div>
+      <div className="font-serif text-base space-y-2">
+        <div className="font-bold mb-1">Remarks in :</div>
         <div className="flex items-baseline gap-2">
-          <span className="font-bold whitespace-nowrap">Sports:</span>
-          <span className="flex-1 border-b border-black pb-0.5 min-w-[150px] font-merriweather font-medium text-slate-800 text-[12px] px-2">{reportCard.sportsRemark}</span>
-          <span className="font-bold whitespace-nowrap ml-4">Discipline:</span>
-          <span className="flex-1 border-b border-black pb-0.5 min-w-[150px] font-merriweather font-medium text-slate-800 text-[12px] px-2">{reportCard.disciplineRemark}</span>
+          <span className="font-bold whitespace-nowrap w-[150px]">Sports:</span>
+          <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 text-[15px] px-2">{reportCard.sportsRemark}</span>
         </div>
-        
         <div className="flex items-baseline gap-2">
-          <span className="font-bold whitespace-nowrap">Overall Remarks:</span>
-          <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 text-[12px] px-2">{reportCard.overallRemark}</span>
+          <span className="font-bold whitespace-nowrap w-[150px]">Overall:</span>
+          <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 text-[15px] px-2">{reportCard.overallRemark}</span>
         </div>
       </div>
 
-      <div className="mt-24 flex justify-between font-serif text-sm font-bold px-8">
+      <div className="mt-32 flex justify-between font-serif text-base font-bold px-8">
         <div>Parent's signature</div>
         <div>Class teacher's signature</div>
-        <div>Principal signature</div>
+        <div>Signature of the Principal</div>
       </div>
 
     </div>
