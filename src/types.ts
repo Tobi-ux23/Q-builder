@@ -52,6 +52,7 @@ export interface ReportCard {
   sportsRemark: string;
   disciplineRemark: string;
   overallRemark: string;
+  rank?: string;
   
   // Layout Options
   tablePadding?: number;

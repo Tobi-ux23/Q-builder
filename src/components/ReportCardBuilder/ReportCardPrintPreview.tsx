@@ -167,19 +167,23 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
         </tbody>
       </table>
 
-      <div className="font-serif text-base space-y-2">
-        <div className="font-bold mb-1">Remarks in :</div>
-        <div className="flex items-baseline gap-2">
-          <span className="font-bold whitespace-nowrap w-[150px]">Sports:</span>
-          <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 text-[15px] px-2">{reportCard.sportsRemark}</span>
+      <div className="font-serif text-base flex justify-between items-start mt-6">
+        <div className="font-bold text-[17px] pt-1">
+          And secured class rank : <span className="font-merriweather">{reportCard.rank || ""}</span>
         </div>
-        <div className="flex items-baseline gap-2">
-          <span className="font-bold whitespace-nowrap w-[150px]">Overall:</span>
-          <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 text-[15px] px-2">{reportCard.overallRemark}</span>
+        <div className="w-[65%] space-y-2">
+          <div className="flex items-baseline gap-2">
+            <span className="font-bold whitespace-nowrap">Remarks in Sports :</span>
+            <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 text-[15px] px-2">{reportCard.sportsRemark}</span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="font-bold whitespace-nowrap">Overall remarks :</span>
+            <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 text-[15px] px-2">{reportCard.overallRemark}</span>
+          </div>
         </div>
       </div>
 
-      <div className="mt-32 flex justify-between font-serif text-base font-bold px-8">
+      <div className="absolute bottom-[20mm] left-[15mm] right-[15mm] flex justify-between font-serif text-base font-bold px-8">
         <div>Parent's signature</div>
         <div>Class teacher's signature</div>
         <div>Signature of the Principal</div>
