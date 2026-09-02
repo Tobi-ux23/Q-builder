@@ -63,16 +63,16 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
               <img src={reportCard.schoolLogo} alt="Logo" className="w-24 h-24 object-contain shrink-0" />
             </div>
           )}
-          <div className="space-y-1 text-center">
-            <h1 className="text-3xl font-bold uppercase tracking-[0.15em] text-[#100E80]">
+          <div className="flex flex-col items-center justify-center gap-1.5 w-full px-12">
+            <h1 className="text-[28px] leading-tight font-bold uppercase tracking-[0.15em] text-[#100E80]">
               {reportCard.schoolName || "T.L.T. Sports Academy"}
             </h1>
             {reportCard.schoolSubheading && (
-              <h2 className="text-lg font-semibold text-slate-800">
+              <h2 className="text-[19px] leading-tight font-semibold text-[#100E80]">
                 {reportCard.schoolSubheading}
               </h2>
             )}
-            <p className="text-base">
+            <p className="text-base leading-tight">
               {reportCard.schoolAddress || "Tharoijam, Imphal"}
             </p>
           </div>
