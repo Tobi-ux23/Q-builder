@@ -25,7 +25,7 @@ const EMPTY_REPORT_CARD: ReportCard = {
   section: "",
   rollNo: "",
   subjects: ["Subject 1", "Subject 2"],
-  assessments: [{ assessmentName: "Term 1", maxMarks: "100", attendance: "", subjectMarks: {} }],
+  assessments: [{ assessmentName: "Term 1", maxMarks: "100", attendance: "", rank: "", subjectMarks: {} }],
   sportsRemark: "Shows high energy, active participation, and great sportsmanship.",
   disciplineRemark: "Courteous, reliable, and self-disciplined.",
   overallRemark: "Excellent attitude, consistent effort, and good potential."

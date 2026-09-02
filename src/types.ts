@@ -31,6 +31,7 @@ export interface AssessmentRecord {
   assessmentName: string;
   maxMarks?: string;
   attendance?: string;
+  rank?: string;
   subjectMarks: Record<string, string>; // key: subject name, value: mark
 }
 

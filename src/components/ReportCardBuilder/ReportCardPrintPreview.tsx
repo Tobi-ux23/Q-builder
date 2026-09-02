@@ -130,6 +130,9 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
               PERCENTAGE
             </th>
             <th className="border border-black font-bold align-middle break-words max-w-[80px]" style={tableHeaderStyle}>
+              RANK
+            </th>
+            <th className="border border-black font-bold align-middle break-words max-w-[80px]" style={tableHeaderStyle}>
               ATTENDANCE
             </th>
           </tr>
@@ -159,6 +162,9 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
                 {metrics.percentage}
               </td>
               <td className="border border-black font-merriweather font-bold text-slate-900 text-[15px]" style={tableCellStyle}>
+                {a.rank || ""}
+              </td>
+              <td className="border border-black font-merriweather font-bold text-slate-900 text-[15px]" style={tableCellStyle}>
                 {a.attendance || ""}
               </td>
             </tr>
@@ -167,19 +173,14 @@ export function ReportCardPrintPreview({ reportCard }: Props) {
         </tbody>
       </table>
 
-      <div className="font-serif text-base flex justify-between items-start mt-6">
-        <div className="font-bold text-[17px] pt-1">
-          And secured class rank : <span className="font-merriweather">{reportCard.rank || ""}</span>
+      <div className="font-serif text-base flex flex-col gap-2 mt-8">
+        <div className="flex items-baseline gap-2">
+          <span className="font-bold whitespace-nowrap w-[160px] text-right">Remarks in Sports :</span>
+          <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 text-[15px] px-2">{reportCard.sportsRemark}</span>
         </div>
-        <div className="w-[65%] space-y-2">
-          <div className="flex items-baseline gap-2">
-            <span className="font-bold whitespace-nowrap">Remarks in Sports :</span>
-            <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 text-[15px] px-2">{reportCard.sportsRemark}</span>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="font-bold whitespace-nowrap">Overall remarks :</span>
-            <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 text-[15px] px-2">{reportCard.overallRemark}</span>
-          </div>
+        <div className="flex items-baseline gap-2">
+          <span className="font-bold whitespace-nowrap w-[160px] text-right">Overall remarks :</span>
+          <span className="flex-1 border-b border-black pb-0.5 font-merriweather font-medium text-slate-800 text-[15px] px-2">{reportCard.overallRemark}</span>
         </div>
       </div>
 

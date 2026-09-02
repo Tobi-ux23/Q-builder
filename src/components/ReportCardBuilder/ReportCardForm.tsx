@@ -81,7 +81,7 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
   const addAssessment = () => {
     handleChange("assessments", [
       ...reportCard.assessments,
-      { assessmentName: `Assessment ${reportCard.assessments.length + 1}`, maxMarks: "100", attendance: "", subjectMarks: {} },
+      { assessmentName: `Assessment ${reportCard.assessments.length + 1}`, maxMarks: "100", attendance: "", rank: "", subjectMarks: {} },
     ]);
   };
   
@@ -336,6 +336,9 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
                 <th className="border border-slate-200 dark:border-slate-700 p-2 text-center font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 min-w-[100px]">
                   PERCENTAGE
                 </th>
+                <th className="border border-slate-200 dark:border-slate-700 p-2 text-center font-bold text-slate-700 dark:text-slate-300 min-w-[80px]">
+                  RANK
+                </th>
                 <th className="border border-slate-200 dark:border-slate-700 p-2 text-center font-bold text-slate-700 dark:text-slate-300 min-w-[100px]">
                   ATTENDANCE
                 </th>
@@ -383,6 +386,15 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
                   </td>
                   <td className="border border-slate-200 dark:border-slate-700 p-2 text-center bg-slate-50 dark:bg-slate-700/50 font-bold text-slate-600 dark:text-slate-300">
                     {metrics.percentage}
+                  </td>
+                  <td className="border border-slate-200 dark:border-slate-700 p-2">
+                    <input
+                      type="text"
+                      value={assessment.rank || ""}
+                      onChange={(e) => handleAssessmentFieldChange(aIdx, "rank", e.target.value)}
+                      className="w-full bg-transparent text-center focus:outline-none"
+                      placeholder="e.g. 1"
+                    />
                   </td>
                   <td className="border border-slate-200 dark:border-slate-700 p-2">
                     <input
@@ -443,17 +455,7 @@ export function ReportCardForm({ reportCard, onChange }: Props) {
             ))}
           </select>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Rank</label>
-            <input
-              type="text"
-              value={reportCard.rank || ""}
-              onChange={(e) => handleChange("rank", e.target.value)}
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 dark:text-white rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-              placeholder="e.g. 3"
-            />
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Sports Remark</label>
             <input
